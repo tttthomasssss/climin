@@ -4,6 +4,7 @@ import itertools
 import collections
 import numpy as np
 
+# TODO: Dropout and better parameter initialisation
 
 def repeat_or_iter(obj):
     try:
