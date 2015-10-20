@@ -2,3 +2,4 @@
 *.egg-info
 *.suo
 docs/build/*
+.idea/*

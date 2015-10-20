@@ -6,6 +6,7 @@ import itertools
 import random
 import warnings
 
+from scipy import sparse
 import numpy as np
 
 from gd import GradientDescent
@@ -288,14 +289,15 @@ def minibatches(arr, batch_size, d=0):
         Each item of the list is a view of ``arr``. Views are ordered.
     """
     # This alternative is to make this work with lists in the case of d == 0.
-    if d == 0:
+    if d == 0 and not sparse.issparse(arr):
         n_batches, rest = divmod(len(arr), batch_size)
     else:
         n_batches, rest = divmod(arr.shape[d], batch_size)
     if rest:
         n_batches += 1
 
-    slices = (slice(i * batch_size, (i + 1) * batch_size)
+	# The ugly if is needed as a quickfix for dealing with sparse matrices, sparse matrices fail if they get an index that is larger than their size
+    slices = (slice(i * batch_size, (i + 1) * batch_size if i + 1 < n_batches else ((i + 1) * batch_size) - (batch_size - rest))
               for i in range(n_batches))
     if d == 0:
         res = [arr[i] for i in slices]
