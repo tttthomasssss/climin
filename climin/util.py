@@ -9,13 +9,13 @@ import warnings
 from scipy import sparse
 import numpy as np
 
-from gd import GradientDescent
-from bfgs import Lbfgs
-from cg import NonlinearConjugateGradient
-from rprop import Rprop
-from rmsprop import RmsProp
-from adadelta import Adadelta
-from adam import Adam
+from .gd import GradientDescent
+from .bfgs import Lbfgs
+from .cg import NonlinearConjugateGradient
+from .rprop import Rprop
+from .rmsprop import RmsProp
+from .adadelta import Adadelta
+from .adam import Adam
 
 try:
     from sklearn.grid_search import ParameterSampler
@@ -47,7 +47,7 @@ def clear_info(info):
     >>> cleared == {'bar': 1.0, 'loss': 1.0}
     True
     """
-    items = info.iteritems()
+    items = iter(info.items())
     items = ((k, float(v.reshape((1,))[0]) if is_array(v) and v.size == 1 else v)
              for k, v in items)
     items = ((k, v) for k, v in items if not is_array(v))
@@ -60,7 +60,7 @@ def coroutine(f):
     """Turn a generator function into a coroutine by calling .next() once."""
     def started(*args, **kwargs):
         cr = f(*args, **kwargs)
-        cr.next()
+        next(cr)
         return cr
     return started
 
@@ -83,7 +83,7 @@ def mini_slices(n_samples, batch_size):
 
 def draw_mini_slices(n_samples, batch_size, with_replacement=False):
     slices = mini_slices(n_samples, batch_size)
-    idxs = range(len(slices))
+    idxs = list(range(len(slices)))
 
     if with_replacement:
         yield random.choice(slices)
@@ -96,7 +96,7 @@ def draw_mini_slices(n_samples, batch_size, with_replacement=False):
 
 def draw_mini_indices(n_samples, batch_size):
     assert n_samples > batch_size
-    idxs = range(n_samples)
+    idxs = list(range(n_samples))
     random.shuffle(idxs)
     pos = 0
 
@@ -361,7 +361,7 @@ def iter_minibatches(lst, batch_size, dims, n_cycles=False, random_state=None):
             random.shuffle(indices)
             for i in indices:
                 yield tuple(b[i] for b in batches)
-            count = counter.next()
+            count = next(counter)
             if n_cycles and count >= n_cycles:
                 raise StopIteration()
 
@@ -391,7 +391,7 @@ class OptimizerDistribution(object):
         self.options = options
 
     def rvs(self):
-        opt = random.choice(self.options.keys())
+        opt = random.choice(list(self.options.keys()))
         grid = self.options[opt]
         sample = list(ParameterSampler(grid, n_iter=1))[0]
         return opt, sample

@@ -245,7 +245,7 @@ class Patience(object):
 
     def __call__(self, info):
         i = info['n_iter']
-        if isinstance(self.func_or_key, (str, unicode)):
+        if isinstance(self.func_or_key, str):
             loss = info[self.func_or_key]
         else:
             loss = self.func_or_key()
