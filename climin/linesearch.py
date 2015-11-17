@@ -9,12 +9,15 @@ one-dimensional optimization problem, which can then be solved by a line search.
 
 # TODO: this module needs lots of pep8 love.
 
+from __future__ import absolute_import
 
 import itertools
 
-import scipy.optimize
 import numpy as np
 import scipy as sp
+import scipy.optimize
+
+from .compat import range
 
 
 class LineSearch(object):

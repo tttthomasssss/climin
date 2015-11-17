@@ -2,10 +2,9 @@
 
 """This module contains the Resilient propagation optimizer."""
 
-
+from __future__ import absolute_import
 
 from . import mathadapt as ma
-
 from .base import Minimizer
 
 

@@ -32,10 +32,12 @@ reset from time to time. Additionally, we need to perform a line search to solve
 for :math:`\\alpha_t`.
 """
 
+from __future__ import absolute_import
+
 import warnings
 
-import scipy
 import numpy as np
+import scipy
 import scipy.linalg
 import scipy.optimize
 

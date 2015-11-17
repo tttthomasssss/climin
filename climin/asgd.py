@@ -3,6 +3,8 @@
 # TODO: document module
 # TODO: check if gnumpy compatible
 
+from __future__ import absolute_import
+
 from .base import Minimizer
 
 
